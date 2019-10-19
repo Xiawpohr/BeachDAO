@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useWeb3Context } from 'web3-react'
 import BigNumber from 'bignumber.js'
 import { useBlockNumber } from '../contexts/application'
-import { useContract } from './ethereum'
+import { useContract, useGasPrice } from './ethereum'
 import { DAO_ADDRESSES, DAO_FROM_BLOCK } from '../constants'
 import DAO_ABI from '../constants/abis/dao.json'
 
@@ -70,7 +70,8 @@ export function useDAOProposals() {
         ])
       })
       .then(proposals => {
-        return proposals.map(proposal => ({
+        return proposals.map((proposal, i) => ({
+          id: i,
           location: proposal.location,
           description: proposals.description,
           startTime: new BigNumber(proposal.startTime).toNumber(),
@@ -86,4 +87,97 @@ export function useDAOProposals() {
   }, [daoContract, blockNumber])
 
   return proposals
+}
+
+export function useDAOIsOpenVote() {
+  const blockNumber = useBlockNumber()
+  const daoContract = useDAOContract()
+  const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    daoContract.methods.isOpenVote().call()
+      .then(result => {
+        setIsOpen(result)
+      })
+      .catch(() => {
+        setIsOpen(false)
+      })
+  }, [daoContract, blockNumber])
+
+  return isOpen
+}
+
+export function useDAOStartVoteTime() {
+  const blockNumber = useBlockNumber()
+  const daoContract = useDAOContract()
+  const [startVoteTime, setStartVoteTime] = useState()
+
+  useEffect(() => {
+    daoContract.methods.startVoteTime().call()
+      .then(result => {
+        setStartVoteTime(result)
+      })
+      .catch(() => {
+        setStartVoteTime()
+      })
+  }, [daoContract, blockNumber])
+
+  return startVoteTime
+}
+
+export function useDAODonate() {
+  const { account } = useWeb3Context()
+  const { getPrice } = useGasPrice()
+  const daoContract = useDAOContract()
+
+  return useCallback(async (name) => {
+    const donate = daoContract.methods.donate(name)
+    const estimatedGas = await donate.estimateGas()
+    const gas = new BigNumber(estimatedGas).times(1.5).toFixed(0)
+    const gasPrice = await getPrice()
+
+    return donate.send({
+      from: account,
+      gas,
+      gasPrice,
+    })
+  }, [daoContract, account, getPrice])
+}
+
+export function useDAOLauchActivity() {
+  const { account } = useWeb3Context()
+  const { getPrice } = useGasPrice()
+  const daoContract = useDAOContract()
+
+  return useCallback(async (startTime, endTime, location, description) => {
+    const lauchActivity = daoContract.methods.newProposal(startTime, endTime, location, description)
+    const estimatedGas = await lauchActivity.estimateGas()
+    const gas = new BigNumber(estimatedGas).times(1.5).toFixed(0)
+    const gasPrice = await getPrice()
+
+    return lauchActivity.send({
+      from: account,
+      gas,
+      gasPrice
+    })
+  }, [daoContract, account, getPrice])
+}
+
+export function useDAOVote() {
+  const { account } = useWeb3Context()
+  const { getPrice } = useGasPrice()
+  const daoContract = useDAOContract()
+
+  return useCallback(async (proposalId) => {
+    const vote = daoContract.methods.vote(proposalId)
+    const estimatedGas = await vote.estimateGas()
+    const gas = new BigNumber(estimatedGas).times(1.5).toFixed(0)
+    const gasPrice = await getPrice()
+
+    return vote.send({
+      from: account,
+      gas,
+      gasPrice
+    })
+  }, [daoContract, account, getPrice])
 }

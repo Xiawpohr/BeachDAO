@@ -1,8 +1,8 @@
-import { useMemo, useEffect, useState } from 'react'
+import { useMemo, useEffect, useState, useCallback } from 'react'
 import { useWeb3Context } from 'web3-react'
 import BigNumber from 'bignumber.js'
 import { useBlockNumber } from '../contexts/application'
-import { getContract } from '../utils'
+import { getContract, getGasPrice } from '../utils'
 import { BCD_ADDRESSES } from '../constants'
 import BCD_ABI from '../constants/abis/token.json'
 
@@ -21,6 +21,13 @@ export function useContract(address, abi, withSignerIfPossible = true) {
       return null
     }
   }, [address, abi, library, account, withSignerIfPossible])
+}
+
+export function useGasPrice() {
+  const [level, setLevel] = useState('fast')
+  const getPrice = useCallback(() => getGasPrice(level), [level])
+
+  return { getPrice, setLevel }
 }
 
 export function useETHBalance() {
