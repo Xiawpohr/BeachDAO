@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Web3Status from './Web3Status'
+import LauchActivityModal from './LauchActivityModal'
 
 const HeaderWrapper = styled.div`
   width: 100%;
@@ -42,14 +43,17 @@ const HeaderButton = styled.button`
 `
 
 export default function Header() {
+  const [openLauchModal, setOpenLauchModal] = useState(false)
+
   return (
     <HeaderWrapper>
       <HeaderLogo>BeachDAO</HeaderLogo>
       <HeaderActions>
-        <HeaderButton>發起淨灘</HeaderButton>
+        <HeaderButton onClick={() => { setOpenLauchModal(true) }}>發起淨灘</HeaderButton>
         <HeaderButton>捐款</HeaderButton>
         <Web3Status />
       </HeaderActions>
+      <LauchActivityModal open={openLauchModal} handleClose={() => { setOpenLauchModal(false) }} />
     </HeaderWrapper>
   )
 }
