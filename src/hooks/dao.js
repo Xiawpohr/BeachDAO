@@ -72,8 +72,9 @@ export function useDAOProposals() {
       .then(proposals => {
         return proposals.map((proposal, i) => ({
           id: i,
+          recipient: proposal.recipient,
           location: proposal.location,
-          description: proposals.description,
+          description: proposal.description,
           startTime: new BigNumber(proposal.startTime).toNumber(),
           isPassed: proposal.proposalPassed
         }))
@@ -87,6 +88,26 @@ export function useDAOProposals() {
   }, [daoContract, blockNumber])
 
   return proposals
+}
+
+export function useDAOProposalVotes(id) {
+  const blockNumber = useBlockNumber()
+  const daoContract = useDAOContract()
+  const [votes, setVotes] = useState()
+
+  useEffect(() => {
+    if (id) {
+      daoContract.methods.proposalVotes(id).call()
+        .then(result => {
+          setVotes(new BigNumber(result))
+        })
+        .catch(() => {
+          setVotes()
+        })
+    }
+  }, [daoContract, id, blockNumber])
+  
+  return votes
 }
 
 export function useDAOIsOpenVote() {

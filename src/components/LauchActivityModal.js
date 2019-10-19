@@ -9,7 +9,6 @@ import TextField from '@material-ui/core/TextField'
 import DateFnsUtils from '@date-io/date-fns'
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDateTimePicker,
 } from '@material-ui/pickers'
 import { useDAOLauchActivity } from '../hooks/dao'

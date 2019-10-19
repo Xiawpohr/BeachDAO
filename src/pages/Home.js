@@ -153,14 +153,14 @@ export default function Home() {
               <WidgetTitle>累積捐款資金 (ETH)</WidgetTitle>
               <WidgetSubTitle>當資金到達 10 ETH 以上時，即開始進行投票來決定要資助淨攤活動</WidgetSubTitle>
             </div>
-            <WidgetData>{totalDonation ? amountFormatter(totalDonation, 18) : '-'}</WidgetData>
+            <WidgetData>{totalDonation ? amountFormatter(totalDonation, 18, 2) : '-'}</WidgetData>
           </Widget>
           <Widget>
             <div>
               <WidgetTitle>個人餘額 (BCD)</WidgetTitle>
               <WidgetSubTitle>參加淨灘活動，保護海灘健康，就可以獲得海灘貨幣</WidgetSubTitle>
             </div>
-            <WidgetData>{BCDBalance ? amountFormatter(BCDBalance, 18) : '-'}</WidgetData>
+            <WidgetData>{BCDBalance ? amountFormatter(BCDBalance, 18, 2) : '-'}</WidgetData>
           </Widget>
         </Row>
         <Row>

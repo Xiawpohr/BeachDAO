@@ -13,21 +13,24 @@ export function useActivityParticipientAmount(address) {
   const blockNumber = useBlockNumber()
   const activityContract = useActivityContract(address)
   const [amount, setAmount] = useState()
+  console.log(address)
 
   useEffect(() => {
-    activityContract.getPastEvents('Joint')
-      .then(events => {
-        return events
-          .map(event => event.returnValues.participient)
-          .filter((participient, i, arr) => arr.indexOf(participient) === i)
-          .length
-      })
-      .then(result => {
-        setAmount(new BigNumber(result))
-      })
-      .catch(() => {
-        setAmount()
-      })
+    if (activityContract) {
+      activityContract.getPastEvents('Joint')
+        .then(events => {
+          return events
+            .map(event => event.returnValues.participient)
+            .filter((participient, i, arr) => arr.indexOf(participient) === i)
+            .length
+        })
+        .then(result => {
+          setAmount(new BigNumber(result))
+        })
+        .catch(() => {
+          setAmount()
+        })
+    }
   }, [activityContract, blockNumber])
 
   return amount
@@ -57,17 +60,19 @@ export function useActivityJoin(address) {
   const activityContract = useActivityContract(address)
 
   return useCallback(async (name) => {
-    const join = activityContract.methods.join(name)
-    const estimatedGas = await join.estimateGas()
-    const gas = new BigNumber(estimatedGas).times(1.5).toFixed(0)
-    const gasPrice = await getPrice()
-
-    return join.send({
-      from: account,
-      gas,
-      gasPrice,
-    })
-  }, [activityContract, account, getPrice])
+    if (address) {
+      const join = activityContract.methods.join(name)
+      const estimatedGas = await join.estimateGas()
+      const gas = new BigNumber(estimatedGas).times(1.5).toFixed(0)
+      const gasPrice = await getPrice()
+  
+      return join.send({
+        from: account,
+        gas,
+        gasPrice,
+      })
+    }
+  }, [address, activityContract, account, getPrice])
 }
 
 export function useActivityReward(address) {

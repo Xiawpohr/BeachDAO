@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import Tabs from '@material-ui/core/Tabs'
@@ -6,6 +6,7 @@ import Tab from '@material-ui/core/Tab'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import ActivityItem from './ActivityItem'
+import { useDAOProposals } from '../hooks/dao'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props
@@ -46,41 +47,14 @@ const useStyles = makeStyles(theme => ({
 
 export default function SimpleTabs() {
   const classes = useStyles()
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = useState(0)
+
+  const proposals = useDAOProposals()
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
-  const notPassedActivities = [
-    {
-      id: '1',
-      name: '淨灘活動',
-      desc: '',
-      location: '台北',
-      startDateTime: 1569915268,
-      endVoteDateTime: 1569915268,
-      isVoted: false,
-      participants: 8,
-      voters: 10,
-      isPassed: false,
-      isRewarded: false,
-      isElected: false,
-    },
-    {
-      id: '2',
-      name: '淨灘活動',
-      desc: '',
-      location: '台中',
-      startDateTime: 1569915268,
-      endVoteDateTime: 1569915268,
-      isVoted: true,
-      participants: 3,
-      voters: 5,
-      isPassed: false,
-      isRewarded: false,
-      isElected: true,
-    },
-  ]
+  
   const passedActivities = [
     {
       id: '3',
@@ -111,6 +85,7 @@ export default function SimpleTabs() {
       isElected: false,
     },
   ]
+
   return (
     <div className={classes.root}>
       <Tabs
@@ -125,7 +100,7 @@ export default function SimpleTabs() {
         <Tab label='已參加活動' {...a11yProps(1)} />
       </Tabs>
       <TabPanel value={value} index={0}>
-        {notPassedActivities.map(activity => (
+        {!!proposals.length && proposals.map(activity => (
           <ActivityItem key={activity.id} {...activity} />
         ))}
       </TabPanel>
