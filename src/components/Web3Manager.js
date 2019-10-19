@@ -1,5 +1,17 @@
 import React, { useEffect } from 'react'
+import { isMobile } from 'react-device-detect'
 import { useWeb3Context, Connectors } from 'web3-react'
+import Web3 from 'web3'
+import styled from 'styled-components'
+import { ReactComponent as Loading } from '../assets/ripple.svg'
+
+const Center = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
 
 const { Connector } = Connectors
 
@@ -17,7 +29,22 @@ export default function Web3Manager({ children }) {
   useEffect(() => {
     if (!active && !error) {
       if (window.ethereum || window.web3) {
-        tryToSetConnector(setConnector, setError)
+        if (isMobile) {
+          tryToSetConnector(setConnector, setError)
+        } else {
+          const web3 = new Web3(window.ethereum)
+          web3.eth.getAccounts(accounts => {
+            if (accounts.length > 0) {
+              tryToSetConnector(setConnector, setError)
+            } else {
+              setConnector('Network', { suppressAndThrowErrors: true }).catch(
+                err => {
+                  setError(err)
+                },
+              )
+            }
+          })
+        }
       } else {
         setConnector('Network', { suppressAndThrowErrors: true }).catch(err => {
           setError(err)
@@ -37,7 +64,11 @@ export default function Web3Manager({ children }) {
   })
 
   if (!active && !error) {
-    return <div>Loading...</div>
+    return (
+      <Center>
+        <Loading />
+      </Center>
+    )
   } else if (error) {
     return <div>Unknown Error</div>
   } else {
