@@ -10,6 +10,7 @@ import {
 } from '../hooks/dao'
 import { amountFormatter } from '../utils'
 import Header from '../components/Header'
+import ActivityContainer from '../components/ActivityContainer'
 
 const AppWrapper = styled.div`
   width: 100vw;
@@ -139,7 +140,7 @@ export default function Home() {
       )
     }
   }, [leftTime, leftDays, leftHours, leftMinutes])
-  
+
   // const proposals = useDAOProposals()
 
   return (
@@ -184,6 +185,9 @@ export default function Home() {
             </TimeWrapper>
           )
         }
+        <Row>
+          <ActivityContainer />
+        </Row>
       </Container>
     </AppWrapper>
   )
