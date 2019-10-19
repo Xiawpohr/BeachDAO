@@ -1,16 +1,19 @@
 import React from 'react'
 import Expenses from './Expenses'
-import Activity from './Activity'
+import MainBox from './MainBox'
 import styled from 'styled-components'
 const Body = styled.div`
-  flex:1
-  background: rgba(0, 0, 0, 0.05);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 680px;
+  margin: auto;
 `
 export default function Home() {
   return (
     <Body>
       <Expenses />
-      <Activity />
+      <MainBox />
     </Body>
   )
 }
