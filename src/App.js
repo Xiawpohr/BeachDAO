@@ -11,6 +11,7 @@ import Web3Manager from './components/Web3Manager'
 import Home from './pages/Home'
 import NetworkOnlyConnector from './connectors/NetworkOnlyConnector'
 import InjectedConnector from './connectors/InjectedConnector'
+import ThemeProvider, { GlobalStyle } from './themes'
 
 const Network = new NetworkOnlyConnector({
   providerURL: process.env.REACT_APP_NETWORK_URL || '',
@@ -42,9 +43,12 @@ function App() {
     <Web3Provider connectors={connectors} libraryName='web3.js' web3Api={Web3}>
       <ContextProviders>
         <Updaters />
-        <Web3Manager>
-          <Home />
-        </Web3Manager>
+        <ThemeProvider>
+          <GlobalStyle />
+          <Web3Manager>
+            <Home />
+          </Web3Manager>
+        </ThemeProvider>
       </ContextProviders>
     </Web3Provider>
   )
