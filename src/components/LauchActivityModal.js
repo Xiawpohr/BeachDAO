@@ -1,9 +1,18 @@
 import React, { useState } from 'react'
+import { useWeb3Context } from 'web3-react'
+import BigNumber from 'bignumber.js'
 import { makeStyles } from '@material-ui/core/styles'
 import Modal from '@material-ui/core/Modal'
 import Button from '@material-ui/core/Button'
 import styled from 'styled-components'
 import TextField from '@material-ui/core/TextField'
+import DateFnsUtils from '@date-io/date-fns'
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDateTimePicker,
+} from '@material-ui/pickers'
+import { useDAOLauchActivity } from '../hooks/dao'
 
 const Title = styled.div`
   margin-bottom: 20px;
@@ -43,51 +52,59 @@ const buttonStyle = {
 
 export default function LauchActivityModal(props) {
   const { open, handleClose } = props
+  const { account } = useWeb3Context()
   const classes = useStyles()
   const [modalStyle] = useState(getModalStyle)
-  const [values, setValues] = useState({
-    location: '',
-    startTime: '2019-10-20T10:30',
-    endTime: '2019-10-21T10:30',
-    description: '',
-  })
 
-  const handleChange = name => event => {
-    setValues({ ...values, [name]: event.target.value })
+  const [location, setLocation] = useState('')
+  const [description, setDescription] = useState('')
+  const [startTime, setStartTime] = useState(new Date())
+  const [endTime, setEndTime] = useState(new Date())
+
+  const lauchActivity = useDAOLauchActivity()
+
+  const isConnected = !!account
+
+  const onClick = () => {
+    if (location && description && startTime && endTime && isConnected) {
+      const startTimeParsed = new BigNumber(Date.parse(startTime) / 1000).toFixed(0)
+      const endTimeParsed = new BigNumber(Date.parse(endTime) / 1000).toFixed(0)
+
+      lauchActivity(startTimeParsed, endTimeParsed, location, description)
+      handleClose()
+    }
   }
 
   return (
     <Modal open={open} onClose={handleClose}>
       <form style={modalStyle} className={classes.paper}>
         <Title>新增活動</Title>
-        <TextField
-          id='datetime-start'
-          label='活動開始時間'
-          type='datetime-local'
-          style={{ margin: '20px' }}
-          defaultValue={values.startTime}
-          className={classes.textField}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-        <TextField
-          id='datetime-end'
-          label='活動結束時間'
-          type='datetime-local'
-          style={{ margin: '20px' }}
-          defaultValue={values.endTime}
-          className={classes.textField}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDateTimePicker
+            disableToolbar
+            variant='outlined'
+            margin='normal'
+            id='date-picker-inline'
+            label='活動開始時間'
+            value={startTime}
+            onChange={(date) => { setStartTime(date)}}
+          />
+          <KeyboardDateTimePicker
+            disableToolbar
+            variant='outlined'
+            margin='normal'
+            id='date-picker-inline'
+            label='活動結束時間'
+            value={endTime}
+            onChange={(date) => { setEndTime(date)}}
+          />
+        </MuiPickersUtilsProvider>
         <TextField
           id='outlined-location'
           label='地點'
           className={classes.textField}
-          value={values.location}
-          onChange={handleChange('name')}
+          value={location}
+          onChange={(event) => { setLocation(event.target.value) }}
           style={{ margin: '20px' }}
           variant='outlined'
         />
@@ -95,8 +112,8 @@ export default function LauchActivityModal(props) {
           id='outlined-description'
           label='描述'
           className={classes.textField}
-          value={values.description}
-          onChange={handleChange('description')}
+          value={description}
+          onChange={(event) => { setDescription(event.target.value) }}
           style={{ margin: '20px' }}
           variant='outlined'
         />
@@ -104,7 +121,8 @@ export default function LauchActivityModal(props) {
           style={buttonStyle}
           variant='contained'
           color='primary'
-          onClick={handleClose}
+          onClick={onClick}
+          disabled={!isConnected}
         >
           新增
         </Button>
