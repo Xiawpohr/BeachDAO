@@ -3,7 +3,7 @@ export const BCD_ADDRESSES = {
 }
 
 export const DAO_ADDRESSES = {
-  42: '0x8418989637e2e127a225A8C6251be7271FcaAf2d'
+  42: '0x860631C73c07774b8d220DDbdFfA0C5e29181af9'
 }
 
 export const DAO_FROM_BLOCK = '14237834'

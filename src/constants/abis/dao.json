@@ -321,6 +321,21 @@
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			}
+		],
+		"name": "donate",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
 		"constant": true,
 		"inputs": [],
 		"name": "isOpenVote",
@@ -333,21 +348,6 @@
 		],
 		"payable": false,
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			}
-		],
-		"name": "denote",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
 		"type": "function"
 	},
 	{

@@ -130,14 +130,15 @@ export function useDAODonate() {
   const { getPrice } = useGasPrice()
   const daoContract = useDAOContract()
 
-  return useCallback(async (name) => {
+  return useCallback(async (name, value) => {
     const donate = daoContract.methods.donate(name)
-    const estimatedGas = await donate.estimateGas()
+    const estimatedGas = await donate.estimateGas({ value })
     const gas = new BigNumber(estimatedGas).times(1.5).toFixed(0)
     const gasPrice = await getPrice()
 
     return donate.send({
       from: account,
+      value,
       gas,
       gasPrice,
     })
