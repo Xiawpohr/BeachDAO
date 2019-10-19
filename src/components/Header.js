@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import Web3Status from './Web3Status'
 import LauchActivityModal from './LauchActivityModal'
+import DonationModal from './DonationModal'
 
 const HeaderWrapper = styled.div`
   width: 100%;
@@ -44,16 +45,24 @@ const HeaderButton = styled.button`
 
 export default function Header() {
   const [openLauchModal, setOpenLauchModal] = useState(false)
+  const [openDonateModal, setOpenDonateModal] = useState(false)
 
   return (
     <HeaderWrapper>
       <HeaderLogo>BeachDAO</HeaderLogo>
       <HeaderActions>
         <HeaderButton onClick={() => { setOpenLauchModal(true) }}>發起淨灘</HeaderButton>
-        <HeaderButton>捐款</HeaderButton>
+        <HeaderButton onClick={() => { setOpenDonateModal(true) }}>捐款</HeaderButton>
         <Web3Status />
       </HeaderActions>
-      <LauchActivityModal open={openLauchModal} handleClose={() => { setOpenLauchModal(false) }} />
+      <LauchActivityModal
+        open={openLauchModal}
+        handleClose={() => { setOpenLauchModal(false) }}
+      />
+      <DonationModal
+        open={openDonateModal}
+        handleClose={() => { setOpenDonateModal(false) }}
+      />
     </HeaderWrapper>
   )
 }
