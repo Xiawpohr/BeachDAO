@@ -1,8 +1,18 @@
 import React from 'react'
-import { useBlockNumber } from '../contexts/application'
+import Header from '../components/Header'
+import Body from '../components/Body'
+import styled from 'styled-components'
 
 export default function Home() {
-  const blockNumber = useBlockNumber()
-
-  return <div>Block Number: {blockNumber}</div>
+  const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  `
+  return (
+    <Container>
+      <Header />
+      <Body />
+    </Container>
+  )
 }
