@@ -1,7 +1,9 @@
-export const TOKEN_ADDRESSES = {
+export const BCD_ADDRESSES = {
   42: '0x741c35007D0FA103049307dd8BbCf4B066F916Ae'
 }
 
 export const DAO_ADDRESSES = {
   42: '0xC764E38278096eb74a7F03271a33C7BC561e7Ccd'
 }
+
+export const DAO_FROM_BLOCK = '14237834'
