@@ -9,8 +9,9 @@ const white = '#FFFFFF'
 const theme = {
   black,
   white,
-  textColor: 'rgba(0,0,0, 0.78)',
+  textColor: 'rgba(0, 0, 0, 0.78)',
   backgroundColor: '#FDFFF5',
+  shadowColor: 'rgba(0, 0, 0, 0.1)',
   navyBlue: '#2377E3',
   hawkesBlue: '#DBE9FF'
 }
