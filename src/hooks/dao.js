@@ -40,7 +40,7 @@ export function useDAOMemberAmount() {
     })
       .then(events => {
         return events
-          .map(event => event.returnValues.voter)
+          .map(event => event.returnValues.donator)
           .filter((address, i, arr) => arr.indexOf(address) === i)
           .length
       })
