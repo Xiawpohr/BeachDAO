@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
-import { useBlockNumber } from '../contexts/application'
 import { useETHBalance, useBCDBalance, useBCDTotalSupply } from '../hooks/ethereum'
 import {
   useDAOTotalDonation,
   useDAOMemberAmount,
   useDAOProposals,
+  useDAOIsOpenVote,
+  useDAOStartVoteTime
 } from '../hooks/dao'
 import { amountFormatter } from '../utils'
 import Header from '../components/Header'
@@ -90,13 +91,56 @@ const TimeHeadline = styled.div`
 `
 
 export default function Home() {
-  const blockNumber = useBlockNumber()
-  const ETHBalance = useETHBalance()
   const BCDBalance = useBCDBalance()
   const BCDTotalSupply = useBCDTotalSupply()
   const totalDonation = useDAOTotalDonation()
   const memberAmount = useDAOMemberAmount()
-  const proposals = useDAOProposals()
+  const isOpenVote = useDAOIsOpenVote()
+  const startVoteTime = useDAOStartVoteTime()
+
+  const leftTime = useMemo(() => {
+    if (startVoteTime) {
+      return startVoteTime.plus(864000).minus(Date.now() / 1000)
+    } else {
+      return null
+    }
+  }, [startVoteTime])
+
+  const leftDays = useMemo(() => {
+    if (leftTime) {
+      return Math.floor(leftTime.div(86400).toNumber())
+    } else {
+      return null
+    }
+  }, [leftTime])
+
+  const leftHours = useMemo(() => {
+    if (leftTime && leftDays) {
+      return Math.floor((leftTime.minus(leftDays * 86400)).div(3600).toNumber())
+    } else {
+      return null
+    }
+  }, [leftTime, leftDays])
+
+  const leftMinutes = useMemo(() => {
+    if (leftTime && leftDays && leftHours) {
+      return Math.floor(
+        (leftTime.minus(leftDays * 86400).minus(leftHours * 3600)).div(60).toNumber()
+      )
+    } else {
+      return null
+    }
+  }, [leftTime, leftDays, leftHours])
+
+  const leftSeconds = useMemo(() => {
+    if (leftTime && leftDays && leftHours && leftMinutes) {
+      return Math.floor(
+        (leftTime.minus(leftDays * 86400).minus(leftHours * 3600).minus(leftMinutes * 60)).toNumber()
+      )
+    }
+  }, [leftTime, leftDays, leftHours, leftMinutes])
+  
+  // const proposals = useDAOProposals()
 
   return (
     <AppWrapper>
@@ -108,44 +152,39 @@ export default function Home() {
               <WidgetTitle>累積捐款資金 (ETH)</WidgetTitle>
               <WidgetSubTitle>當資金到達 10 ETH 以上時，即開始進行投票來決定要資助淨攤活動</WidgetSubTitle>
             </div>
-            <WidgetData>12</WidgetData>
+            <WidgetData>{totalDonation ? amountFormatter(totalDonation, 18) : '-'}</WidgetData>
           </Widget>
           <Widget>
             <div>
-              <WidgetTitle>個人餘額 (BCD))</WidgetTitle>
+              <WidgetTitle>個人餘額 (BCD)</WidgetTitle>
               <WidgetSubTitle>參加淨灘活動，保護海灘健康，就可以獲得海灘貨幣</WidgetSubTitle>
             </div>
-            <WidgetData>120</WidgetData>
+            <WidgetData>{BCDBalance ? amountFormatter(BCDBalance, 18) : '-'}</WidgetData>
           </Widget>
         </Row>
         <Row>
           <Widget>
             <div>
               <WidgetTitle>捐款人數</WidgetTitle>
-              <WidgetData>2000</WidgetData>
+              <WidgetData>{memberAmount ? memberAmount.toString() : '-'}</WidgetData>
             </div>
           </Widget>
           <Widget>
             <div>
               <WidgetTitle>海灘貨幣發行量 (BCD)</WidgetTitle>
-              <WidgetData>200000000</WidgetData>
+              <WidgetData>{BCDTotalSupply ? amountFormatter(BCDTotalSupply, 18) : '-'}</WidgetData>
             </div>
           </Widget>
         </Row>
-        <TimeWrapper>
-          <TimeText>距離投票截止時間還剩下</TimeText>
-          <TimeHeadline>9 天 5 時 34 分 21 秒</TimeHeadline>
-        </TimeWrapper>
+        {
+          isOpenVote && (
+            <TimeWrapper>
+              <TimeText>距離投票截止時間還剩下</TimeText>
+              <TimeHeadline>{leftDays} 天 {leftHours} 時 {leftMinutes} 分 {leftSeconds} 秒</TimeHeadline>
+            </TimeWrapper>
+          )
+        }
       </Container>
-      <div>Block Number: {blockNumber}</div>
-      <div>ETH Balance: {ETHBalance ? amountFormatter(ETHBalance, 18) : '-'}</div>
-      <div>BCD Balance: {BCDBalance ? amountFormatter(BCDBalance, 18) : '-'}</div>
-      <div>BCD TotalSupply: {BCDTotalSupply ? amountFormatter(BCDTotalSupply, 18) : '-'}</div>
-      <div>Total Donation: {totalDonation ? amountFormatter(totalDonation, 18) : '-'}</div>
-      <div>Member Amount: {memberAmount ? memberAmount.toString() : '-'}</div>
-      <div>Proposal Locations: {
-        proposals.map((proposal, i) => <div key={i}>{proposal.location}</div>)
-      }</div>
     </AppWrapper>
   )
 }

@@ -115,7 +115,7 @@ export function useDAOStartVoteTime() {
   useEffect(() => {
     daoContract.methods.startVoteTime().call()
       .then(result => {
-        setStartVoteTime(result)
+        setStartVoteTime(new BigNumber(result))
       })
       .catch(() => {
         setStartVoteTime()
