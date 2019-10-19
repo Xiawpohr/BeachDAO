@@ -11,7 +11,8 @@ const theme = {
   white,
   textColor: 'rgba(0,0,0, 0.78)',
   backgroundColor: '#FDFFF5',
-  navyBlue: '#2377E3'
+  navyBlue: '#2377E3',
+  hawkesBlue: '#DBE9FF'
 }
 
 export default function ThemeProvider({ children }) {

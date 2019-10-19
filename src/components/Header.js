@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import Web3Status from './Web3Status'
 
 const HeaderWrapper = styled.div`
   width: 100%;
@@ -47,7 +48,7 @@ export default function Header() {
       <HeaderActions>
         <HeaderButton>發起淨灘</HeaderButton>
         <HeaderButton>捐款</HeaderButton>
-        <HeaderButton>連線到錢包</HeaderButton>
+        <Web3Status />
       </HeaderActions>
     </HeaderWrapper>
   )
