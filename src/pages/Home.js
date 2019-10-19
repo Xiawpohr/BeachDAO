@@ -1,7 +1,11 @@
 import React from 'react'
 import { useBlockNumber } from '../contexts/application'
 import { useETHBalance, useBCDBalance, useBCDTotalSupply } from '../hooks/ethereum'
-import { useDAOTotalDonation, useDAOMemberAmount } from '../hooks/dao'
+import {
+  useDAOTotalDonation,
+  useDAOMemberAmount,
+  useDAOProposals,
+} from '../hooks/dao'
 import { amountFormatter } from '../utils'
 
 export default function Home() {
@@ -11,6 +15,7 @@ export default function Home() {
   const BCDTotalSupply = useBCDTotalSupply()
   const totalDonation = useDAOTotalDonation()
   const memberAmount = useDAOMemberAmount()
+  const proposals = useDAOProposals()
 
   return (
     <>
@@ -20,6 +25,9 @@ export default function Home() {
       <div>BCD TotalSupply: {BCDTotalSupply ? amountFormatter(BCDTotalSupply, 18) : '-'}</div>
       <div>Total Donation: {totalDonation ? amountFormatter(totalDonation, 18) : '-'}</div>
       <div>Member Amount: {memberAmount ? memberAmount.toString() : '-'}</div>
+      <div>Proposal Locations: {
+        proposals.map((proposal, i) => <div key={i}>{proposal.location}</div>)
+      }</div>
     </>
   )
 }

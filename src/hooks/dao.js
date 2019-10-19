@@ -54,3 +54,36 @@ export function useDAOMemberAmount() {
 
   return amount
 }
+
+export function useDAOProposals() {
+  const blockNumber = useBlockNumber()
+  const daoContract = useDAOContract()
+  const [proposals, setProposals] = useState([])
+
+  useEffect(() => {
+    daoContract.methods.numProposals().call()
+      .then(numProposals => {
+        return Promise.all([
+          ...Array(numProposals.toNumber()).fill(0).map((_, i) => {
+            return daoContract.methods.proposals(i).call()
+          })
+        ])
+      })
+      .then(proposals => {
+        return proposals.map(proposal => ({
+          location: proposal.location,
+          description: proposals.description,
+          startTime: new BigNumber(proposal.startTime).toNumber(),
+          isPassed: proposal.proposalPassed
+        }))
+      })
+      .then(result => {
+        setProposals(result)
+      })
+      .catch(() => {
+        setProposals([])
+      })
+  }, [daoContract, blockNumber])
+
+  return proposals
+}
