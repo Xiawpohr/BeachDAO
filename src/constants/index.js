@@ -7,3 +7,7 @@ export const DAO_ADDRESSES = {
 }
 
 export const DAO_FROM_BLOCK = '14237834'
+
+export const ACTIVITY_DEMO_ADDRESSES = {
+  42: '0x1f4a2bd50a184d4fa53d9e051495ebe5d36df7f4'
+}

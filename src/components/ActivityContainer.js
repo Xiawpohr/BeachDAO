@@ -50,40 +50,19 @@ export default function SimpleTabs() {
   const [value, setValue] = useState(0)
 
   const proposals = useDAOProposals()
-
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
   
-  const passedActivities = [
+  const passedProposals = [
     {
       id: '3',
       name: '淨灘活動',
-      desc: '',
+      description: '',
       location: '宜蘭',
-      startDateTime: 1569915268,
-      endVoteDateTime: 1569915268,
-      isVoted: false,
-      participants: 10,
-      voters: 10,
+      startTime: 1571534862,
       isPassed: true,
-      isRewarded: true,
-      isElected: false,
-    },
-    {
-      id: '4',
-      name: '淨灘活動',
-      desc: '',
-      location: '高雄',
-      startDateTime: 1569915268,
-      endVoteDateTime: 1569915268,
-      isVoted: true,
-      participants: 10,
-      voters: 10,
-      isPassed: true,
-      isRewarded: false,
-      isElected: false,
-    },
+    }
   ]
 
   return (
@@ -105,7 +84,7 @@ export default function SimpleTabs() {
         ))}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        {passedActivities.map(activity => (
+        {passedProposals.map(activity => (
           <ActivityItem key={activity.id} {...activity} />
         ))}
       </TabPanel>

@@ -6,9 +6,10 @@ import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import { useDAOProposalVotes, useDAOVote } from '../hooks/dao'
 import {
-  useActivityParticipientAmount,
   useActivityJoin,
+  useActivityReward,
 } from '../hooks/activity'
+import { ACTIVITY_DEMO_ADDRESSES } from '../constants'
 
 const Activity = styled.div`
   flex-direction: column
@@ -57,7 +58,9 @@ const Voters = styled.div`
     margin-top: 1rem;
   }
 `
-const IsPassed = styled.div``
+const IsPassed = styled.div`
+  margin-top: 1rem;
+`
 
 const LeftBox = styled.div`
   display: flex;
@@ -84,7 +87,7 @@ const useStyles = makeStyles({
 export default function ActivityItem(props) {
   const classes = useStyles()
 
-  const { account } = useWeb3Context()
+  const { account, networkId } = useWeb3Context()
   const isConnected = !!account
 
   const votes = useDAOProposalVotes(props.id)
@@ -104,6 +107,11 @@ export default function ActivityItem(props) {
     join('')
     setParticipientAmount(participientAmount + 1)
   }, [join, participientAmount])
+
+  const reward = useActivityReward(ACTIVITY_DEMO_ADDRESSES[networkId])
+  const handleReward = useCallback(() => {
+    reward()
+  }, [reward])
   
   return (
     <Activity>
@@ -147,7 +155,11 @@ export default function ActivityItem(props) {
                 props.isRewarded ? (
                   '已領取'
                 ) : (
-                  <Button className={classes.button}>
+                  <Button
+                    className={classes.button}
+                    disabled={!isConnected}
+                    onClick={handleReward}
+                  >
                     領取
                   </Button>
                 ))
