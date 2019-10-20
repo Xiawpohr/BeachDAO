@@ -58,6 +58,7 @@ const Voters = styled.div`
     margin-top: 1rem;
   }
 `
+
 const IsPassed = styled.div`
   margin-top: 1rem;
 `
@@ -154,22 +155,24 @@ export default function ActivityItem(props) {
           <StartDateTimeBox>{'活動時間: ' + startTime}</StartDateTimeBox>
 
           {props.isPassed && (
-            <IsPassed>
-              {
-                ('活動結束',
-                props.isRewarded ? (
-                  '已領取'
-                ) : (
-                  <Button
-                    className={classes.button}
-                    disabled={!isConnected}
-                    onClick={handleReward}
-                  >
-                    領取
-                  </Button>
-                ))
-              }
-            </IsPassed>
+            <>
+              <div>獎勵：200 BCD / 人</div>
+              <IsPassed>
+                {
+                  props.isRewarded ? (
+                    '已領取'
+                  ) : (
+                    <Button
+                      className={classes.button}
+                      disabled={!isConnected}
+                      onClick={handleReward}
+                    >
+                      領取
+                    </Button>
+                  )
+                }
+              </IsPassed>
+            </>
           )}
         </RightBox>
       </Body>
