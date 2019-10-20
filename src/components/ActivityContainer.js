@@ -49,10 +49,11 @@ export default function SimpleTabs() {
   const classes = useStyles()
   const [value, setValue] = useState(0)
 
-  const proposals = useDAOProposals()
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
+  
+  const proposals = useDAOProposals()
   
   const passedProposals = [
     {

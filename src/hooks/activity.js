@@ -13,7 +13,6 @@ export function useActivityParticipientAmount(address) {
   const blockNumber = useBlockNumber()
   const activityContract = useActivityContract(address)
   const [amount, setAmount] = useState()
-  console.log(address)
 
   useEffect(() => {
     if (activityContract) {
