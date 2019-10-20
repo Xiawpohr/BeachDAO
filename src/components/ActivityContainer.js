@@ -58,7 +58,7 @@ export default function SimpleTabs() {
     {
       id: '3',
       name: '淨灘活動',
-      description: '',
+      description: '撿垃圾',
       location: '宜蘭',
       startTime: 1571534862,
       isPassed: true,

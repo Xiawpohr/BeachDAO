@@ -91,7 +91,6 @@ export default function ActivityItem(props) {
   const isConnected = !!account
 
   const isOpenVote = useDAOIsOpenVote()
-  console.log(isOpenVote)
 
   const votes = useDAOProposalVotes(props.id)
   const [participientAmount, setParticipientAmount] = useState(1)
@@ -134,7 +133,10 @@ export default function ActivityItem(props) {
             )}
           </Participants>
           <Voters>
-            <Count>{votes ? votes.toNumber() : 0} 票</Count>
+            <Count>
+            {
+              props.isPassed ? 3 : votes ? votes.toNumber() : 0
+            } 票</Count>
             {!props.isPassed && (
               <Button
                 className={classes.button}
