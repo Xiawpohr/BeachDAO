@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import moment from 'moment'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import { useDAOProposalVotes, useDAOVote } from '../hooks/dao'
+import { useDAOIsOpenVote, useDAOProposalVotes, useDAOVote } from '../hooks/dao'
 import {
   useActivityJoin,
   useActivityReward,
@@ -90,6 +90,9 @@ export default function ActivityItem(props) {
   const { account, networkId } = useWeb3Context()
   const isConnected = !!account
 
+  const isOpenVote = useDAOIsOpenVote()
+  console.log(isOpenVote)
+
   const votes = useDAOProposalVotes(props.id)
   const [participientAmount, setParticipientAmount] = useState(1)
 
@@ -135,7 +138,7 @@ export default function ActivityItem(props) {
             {!props.isPassed && (
               <Button
                 className={classes.button}
-                disabled={!isConnected}
+                disabled={!isConnected || !isOpenVote}
                 onClick={handleVote}
               >
                 投票
