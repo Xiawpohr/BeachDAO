@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
-import { useETHBalance, useBCDBalance, useBCDTotalSupply } from '../hooks/ethereum'
+import { useBCDBalance, useBCDTotalSupply } from '../hooks/ethereum'
 import {
   useDAOTotalDonation,
   useDAOMemberAmount,
-  useDAOProposals,
   useDAOIsOpenVote,
   useDAOStartVoteTime
 } from '../hooks/dao'
